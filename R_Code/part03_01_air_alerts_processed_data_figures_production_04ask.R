@@ -207,7 +207,7 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
     mtext("Duration (Hours)",
           side = 4,
           line = 4,
-          cex = 1.25,
+          cex = 1.35,
           font = 1,
           las = 0
     )    
