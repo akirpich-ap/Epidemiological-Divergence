@@ -1,4 +1,4 @@
-# Comprehensive Analysis of War-Driven Epidemiological Divergence
+# Interpreting Infectious Disease Surveillance During Armed Conflict: War-Driven Epidemiological Divergence
 
 A primary challenge in crisis epidemiology is not only studying the effects of disruptive events on public health, but also distinguishing true changes in infectious disease transmission from artifacts of surveillance system collapse.
 
