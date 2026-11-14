@@ -3,6 +3,7 @@ rm(list = ls(all = TRUE))
 # 20 Digits Precision Representation.
 # options(scipen=20)
 
+
 # Loading package required to read library(readxl)
 library(readxl)
 
@@ -18,6 +19,9 @@ part01_01_districts_redistribution <- part01_01_districts_redistribution[ part01
 
 # Reading new and old regions match file
 load(file = "../R_Data/part01_06_air_raid_sirens_official_data_kharkivska_oblast_aggregated.RData")
+
+
+
 
 
 # Reading master data files
@@ -41,7 +45,6 @@ master_file_all_infections_plots_configuration <- data.frame(read_xlsx(path = ma
 
 # Here is the list of infections which will be processed.
 table(master_file_all_infections_plots_configuration$infection_name, master_file_all_infections_plots_configuration$region_new)
-
 
 
 
@@ -102,6 +105,12 @@ label_function <- function(label_value = "A", label_cex = 4) {
 
 
 
+
+
+
+
+
+
 for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
 {
   
@@ -134,10 +143,10 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
   
   
   # Generating pdf output.
-  pdf(paste("../Plots/part03_01_figure_raw_data_", infection_current, ".pdf", sep = ""), height = 12, width = 28)
+  pdf(paste("../Plots/part03_02_figure_raw_data_", infection_current, ".pdf", sep = ""), height = 12, width = 28)
   # Defining the number of plots
   par(mfrow = c(2, length(regions_unique_rearranged_short)/2 ), mar = c(5.5, 5.5, 5.1, 5.5))
-  
+
   
   for(region_current_name in regions_unique_rearranged_short)
   {
@@ -170,10 +179,10 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
             
 
     plot(
-      x = dataset_current_region$period_last_date,
-      y = dataset_current_region$total_cases,
-      # x = dataset_current_region$period_last_date[dataset_current_region$period_last_date <= war_start],
-      # y = dataset_current_region$total_cases[dataset_current_region$period_last_date <= war_start],
+      # x = dataset_current_region$period_last_date,
+      # y = dataset_current_region$total_cases,
+      x = dataset_current_region$period_last_date[dataset_current_region$period_last_date <= war_start],
+      y = dataset_current_region$total_cases[dataset_current_region$period_last_date <= war_start],
       col = "#238443",
       # col = color_01,
       # col = color_01, 
@@ -201,7 +210,6 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
       cex.main = 2.45,
       cex.sub = 2
     )
-
     
     # Right Label for Y-axis
     mtext("Duration (Hours)",
@@ -227,18 +235,18 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
       # pch = 17,
       type = "p"
     )
-    lines(
-      x = dataset_current_region$period_last_date[dataset_current_region$period_last_date >= war_start],
-      y = dataset_current_region$total_cases[dataset_current_region$period_last_date >= war_start],
-      # col = "#238443",
-      col = "#d9f0a3",
-      # col = color_01,
-      lwd = 5,
-      # pch = 16,
-      # pch = shape_01,
-      # pch = 17,
-      type = "l"
-    )
+    # lines(
+    #   x = dataset_current_region$period_last_date[dataset_current_region$period_last_date >= war_start],
+    #   y = dataset_current_region$total_cases[dataset_current_region$period_last_date >= war_start],
+    #   # col = "#238443",
+    #   col = "#d9f0a3",
+    #   # col = color_01,
+    #   lwd = 5,
+    #   # pch = 16,
+    #   # pch = shape_01,
+    #   # pch = 17,
+    #   type = "l"
+    # )
     lines(
       x = dataset_current_region$period_last_date[dataset_current_region$period_last_date >= war_start],
       y = dataset_current_region$total_cases[dataset_current_region$period_last_date >= war_start],
@@ -252,7 +260,30 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
       type = "p"
     )
     
-
+    # loess smoother
+    lines(
+      x = dataset_current_region$period_last_date[dataset_current_region$period_last_date >= war_start],
+      y = dataset_current_region$total_cases_loess[dataset_current_region$period_last_date >= war_start],
+      # col = "#238443",
+      col = "#72c097",
+      # col = color_01,
+      lwd = 5,
+      # pch = 16,
+      # pch = shape_01,
+      # pch = 17,
+      type = "l"
+    )
+    
+    
+    
+    # lines(
+    #   x = rep(as.integer(war_start), 10),
+    #   y = c(rep(min(dataset_current_region$total_cases), 5), rep(max(dataset_current_region$total_cases), 5)),
+    #   col = "red",
+    #   lwd = 2,
+    #   lty = 2
+    # )
+    
     # Plotting air alerts
     incidence_limits <-  c( min(dataset_current_region$total_cases), max(dataset_current_region$total_cases) * 1.01  )
     
@@ -272,23 +303,23 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
     
     
 
+    # lines(
+    #   x = air_alerts_current_region$period_last_date,
+    #   y = air_alerts_current_region$total_hours_final,
+    #   # col = "#238443",
+    #   col = "#5C4033",
+    #   # col = color_01,
+    #   lwd = 5,
+    #   # pch = 16,
+    #   # pch = shape_01,
+    #   # pch = 17,
+    #   type = "l"
+    # )
     lines(
       x = air_alerts_current_region$period_last_date,
       y = air_alerts_current_region$total_hours_final,
       # col = "#238443",
-      col = "#5C4033",
-      # col = color_01,
-      lwd = 5,
-      # pch = 16,
-      # pch = shape_01,
-      # pch = 17,
-      type = "l"
-    )
-    lines(
-      x = air_alerts_current_region$period_last_date,
-      y = air_alerts_current_region$total_hours_final,
-      # col = "#238443",
-      col = "#5C4033",
+      col = "#d08956",
       # col = color_01,
       lwd = 10,
       pch = 19,
@@ -298,12 +329,26 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
     )
     
 
+    # loess smoother
+    lines(
+      x = air_alerts_current_region$period_last_date,
+      y = air_alerts_current_region$total_hours_final_loess,
+      # col = "#238443",
+      col = "#5C4033",
+      # col = color_01,
+      lwd = 5,
+      # pch = 16,
+      # pch = shape_01,
+      # pch = 17,
+      type = "l"
+    )
+    
     # legend(
     #   x = plot_characteristics_current_disease_current_region$location,
     #   inset = c(plot_characteristics_current_disease_current_region$coordinate1_a, plot_characteristics_current_disease_current_region$coordinate2_a),
-    #   legend = c("Wartime Data", "Air Alerts" ),
+    #   legend = c("Wartime Data", "Wartime Data (loess)", "Air Alerts", "Air Alerts (loess)"),
     #   col = "black",   
-    #   fill = c( "#d9f0a3", "#5C4033" ),
+    #   fill = c( "#d9f0a3", "#72c097", "#d08956", "#5C4033"),
     #   pt.cex = c(4, 2),
     #   # pch = c(19, 20),
     #   # pch = c(19, 20),  
@@ -311,27 +356,47 @@ for( infection_index in c(1:dim(diseases_names_master_file)[1]) )
     #   cex = plot_characteristics_current_disease_current_region$legend_cex_a
     # )
     
+    
     legend(
       x = plot_characteristics_current_disease_current_region$location,
       inset = c(
         plot_characteristics_current_disease_current_region$coordinate1_a,
         plot_characteristics_current_disease_current_region$coordinate2_a
       ),
-      legend = c("Wartime Data", "Air Alerts"),
-      col = c("#d9f0a3", "#5C4033"),
-      lty = c(1, 1),
-      lwd = c(4, 4),
-      pch = c(16, 16),
-      pt.cex = c(3, 3),
+      legend = c(
+        "Wartime Data",
+        "Wartime Data (loess)",
+        "Air Alerts",
+        "Air Alerts (loess)"
+      ),
+      col = c("#d9f0a3", "#72c097", "#d08956", "#5C4033"),
+      lty = c(NA, 1, NA, 1),
+      lwd = c(4, 4, 4, 4),
+      pch = c(16, NA, 16, NA),
+      pt.cex = c(3, NA, 3, NA),
       cex = plot_characteristics_current_disease_current_region$legend_cex_a,
       bty = "n"
     )
-        
-
+    
+    # legend(
+    #   x = plot_characteristics_current_disease_current_region$location,
+    #   inset = c(plot_characteristics_current_disease_current_region$coordinate1, plot_characteristics_current_disease_current_region$coordinate2),
+    #   legend = c("Pre-War Data", "Wartime Data", "War Start", "Air Alerts"),
+    #   col = "black",   
+    #   fill = c("#238443", "#d9f0a3", "red", "#5C4033"),
+    #   pt.cex = c(4, 2),
+    #   # pch = c(19, 20),
+    #   # pch = c(19, 20),  
+    #   # pch = c(19, 20),
+    #   cex = plot_characteristics_current_disease_current_region$legend_cex
+    # )
+    # labels FAQ -> http://www.r-bloggers.com/rotated-axis-labels-in-r-plots/
+    # Creating labels by month and converting.
+    
+    
     legend(x = plot_characteristics_current_disease_current_region$location,
            inset = c(plot_characteristics_current_disease_current_region$coordinate1_b, plot_characteristics_current_disease_current_region$coordinate2_b ),
-           legend = c( as.expression(bquote(r ~ " = " ~ .(corr_actual))),
-                       as.expression(bquote(r ~ "(abs) = " ~ .(corr_absolut)))), 
+           legend = c( as.expression(bquote(r ~ " = " ~ .(corr_actual)))), 
            cex = plot_characteristics_current_disease_current_region$legend_cex_b,
            pt.cex = 0.0001,
            box.col=0, 
